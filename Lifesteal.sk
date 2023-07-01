@@ -1,0 +1,43 @@
+options:
+    prefix: &c&lLIFESTEAL &8|
+
+command /lifesteal <player> <text> <int>:
+    usage: &c&lLIFESTEAL &8| &f/lifesteal &7<player> <give/set> <integer/whole number>
+    trigger:
+        if arg-1 is not player:
+            if arg-2 is "give":
+                if arg-3 is set:
+                    if player's max health >= arg-3:
+                        remove arg-3 from player's max health
+                        add arg-3 to arg-1's max health
+                        send "{@prefix} &7You sent &e%arg-1% &c%arg-3%❤" to player
+                        send "{@prefix} &e%player% &7sent you &c%arg-3%❤" to arg-1
+                    else:
+                        send "{@prefix} &7Not enough hearts&4&l!" to player
+        else if arg-1 is set:
+            else if arg-2 is "set":
+                if arg-3 is set:
+                    if player has the permission "lifesteal.admin":
+                        set arg-1's max health to arg-3
+                        heal arg-1
+                        send "&7You set &e%arg-1%&7's &chearts &7to &c%arg-3%❤" to player
+                    else:
+                        send "{@prefix} &7Insufficent permission&4&l!" to player
+        else:
+            send "{@prefix} &7You cannot give yourself hearts&4&l!" to player
+
+on death:
+    if victim is a player:
+        if attacker is not set:
+            if victim's max health > 0.5:
+                remove 1 from victim's max health
+        else if attacker is set:
+            if victim's max health > 0.5:
+                remove 1 from victim's max health
+
+on respawn:
+    if player's max health <= 0.5:
+        #ban player due to "&cOut of hearts"
+        kick player due to "&cOut of hearts"
+        #send "&cOut of hearts" to player
+

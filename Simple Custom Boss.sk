@@ -1,0 +1,62 @@
+options:
+    prefix: &3&lSIMPLE BOSSES &8| 
+
+    # bosses
+    deathstorm: &c&lDeathstorm
+
+command /simpleboss <text> <text>:
+    permission: op
+    usage: &3&lSIMPLE BOSSES &8| &f/simpleboss &7<spawn> <boss name>
+    trigger:
+        if arg-1 is "spawn":
+            if arg-2 is "deathstorm":
+                send "{@prefix} &7Spawned {@deathstorm} &7at &e%player's location%" to player
+                spawn wither skeleton at player's location
+                set {_entity} to last spawned wither skeleton
+                set name of {_entity} to "{@deathstorm}"
+                set max health of {_entity} 400
+                heal {_entity}
+                set {_entity}'s helmet to bedrock of mending
+                set {_entity}'s chestplate to unbreakable netherite chestplate
+                set {_entity}'s leggings to unbreakable netherite leggings
+                set {_entity}'s boots to unbreakable netherite boots
+                set {_entity}'s tool to unbreakable netherite axe of sharpness 3
+
+
+# Updating health
+
+on damage:
+    if name of victim contains "{@deathstorm}":
+        set name of victim to "{@deathstorm} &8| &7%victim's  health% &f/ &7%victim's max health% &c❤"
+
+on death:
+    if name of victim contains "{@deathstorm}":
+        cancel drops
+        drop nether star named "&cCool Star" at victim's location
+
+# Custom Death Message
+
+on death:
+    if victim is a player:
+        if attacker is a wither skeleton:
+            if name of attacker contains "{@deathstorm}":
+                set death message to "&8(&c&l!&8) &2%victim% &7was destroyed by {@deathstorm}"
+
+# Abilities
+on damage:
+    if attacker is a player:
+        if victim is a wither skeleton:
+            if name of victim contains "{@deathstorm}":
+                if chance of 25%:
+                    # Evoker Fang Spawner
+                    loop 10 times:
+                        set {_i} to loop-value
+                        spawn evoker fang {_i} meters infront of victim ~ vector(0,1,0)
+                        set name of last spawned evoker fang to "&cDeathstorm evoker fang"
+
+on damage:
+    if victim is a player:
+        if attacker is an evoker fang:
+            if name of attacker is "&cDeathstorm evoker fang":
+                set damage to 10
+                set victim on fire for 2.5 seconds

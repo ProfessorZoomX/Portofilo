@@ -1,0 +1,21 @@
+on join:
+    if {kills::%player's uuid%} is not set:
+        set {kills::%player's uuid%} to 0
+        set {deaths::%player's uuid%} to 0
+
+on death:
+    if victim is a player:
+        if attacker is not a player:
+            add 1 to {deaths::%victim's uuid%}
+        else if attacker is not set:
+            add 1 to {deaths::%victim's uuid%}
+        else if attacker is a player:
+            add 1 to {deaths::%victim's uuid%}
+            add 1 to {kills::%victim's uuid%}
+
+command /stats:
+    trigger:
+        send "" to player
+        send "&cKills&f: &e%{kills::%player's uuid%}%" to player
+        send "&cDeaths&f: &e%{deaths::%player's uuid%}%" to player
+        send "" to player
